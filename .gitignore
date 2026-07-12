@@ -1,0 +1,27 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# VS Code workspace settings
+.vscode/
+
+# Environment variables and secrets
+.env
+
+# Generated thumbnails
+thumbnails/
+
+#local images
+images/
+
+
+
+# Local SQLite database files
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
