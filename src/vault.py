@@ -1,8 +1,6 @@
 # coordinates the entire image-ingestion pipeline
-import sqlite3
-from image_database import ImageDatabase
-import image_model
-import image_processing
+
+from database import Database
 import logging
 from pathlib import Path
 
@@ -10,8 +8,8 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-class ImageService():
-    def __init__(self,database:Path|ImageDatabase):
+class Vault():
+    def __init__(self,database:Path|Database):
         
         if not type(database) == database.ImageDatabase:
             self.db = database.ImageDatabase(database)

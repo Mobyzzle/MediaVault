@@ -1,7 +1,7 @@
 import logging
 
-import image_service 
-import image_database
+import vault 
+from database import Database
 
 DB_PATH = "database/imagevault.db"
 
@@ -19,7 +19,7 @@ def main():
     configure_logging()
     logging.info("Starting Imagevault....")
 
-    iv = image_database.ImageDatabase(DB_PATH)
+    iv = Database(DB_PATH)
 
     fav = iv.get_favourites()
 

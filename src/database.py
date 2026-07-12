@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ImageDatabase():
+class Database():
     def __init__(self,path:str|Path):
 
         self.path = Path(path)
