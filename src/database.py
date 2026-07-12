@@ -65,7 +65,7 @@ class Database():
                 """,(id,)
             )
 
-            return self.cursor.fetchall()
+            return self.cursor.fetchone()
 
         except sqlite3.Error as _e:
             logger.exception("An Error occured: %s",(_e,))
