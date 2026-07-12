@@ -14,6 +14,8 @@ class Database():
         
         try:
             self.connection = sqlite3.connect(self.path)
+            self.connection.row_factory = sqlite3.Row
+     
             
             logger.info("Connected to Database...")
 
@@ -23,10 +25,12 @@ class Database():
 
         except sqlite3.Error as _e:
             logger.debug("failed to connect to Database due to: %s ",(_e,))
+            raise FileNotFoundError
 
 
 
         logger.debug("Initialized ImageDatabase, ready to use")
+
     # implement custom queries, and IMPLEMENT THE FUCKING IMAGE OBJECT!!  
     def get_favourites(self,limit:int=1000) -> list[tuple]:
         try:
@@ -48,3 +52,21 @@ class Database():
             logger.exception(_e)
             return None        
     
+    def search_by_id(self,id:int):
+        try:
+            self.cursor.execute(
+                """
+                SELECT 
+                    *
+                FROM
+                    images_v3
+                WHERE
+                    id = ?;
+                """,(id,)
+            )
+
+            return self.cursor.fetchall()
+
+        except sqlite3.Error as _e:
+            logger.exception("An Error occured: %s",(_e,))
+            return None

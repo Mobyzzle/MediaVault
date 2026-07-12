@@ -25,6 +25,8 @@ def main():
 
     print(fav)
 
+    steve = iv.search_by_id(1)
+    print(dict(steve[0]))
 if __name__ == "__main__":
     main()
 
