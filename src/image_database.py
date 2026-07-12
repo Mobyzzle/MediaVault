@@ -13,7 +13,7 @@ class ImageDatabase():
         self.path = Path(path)
         
         try:
-            self.connection = sqlite3.Connection(self.path)
+            self.connection = sqlite3.connect(self.path)
             
             logger.info("Connected to Database...")
 
@@ -27,14 +27,13 @@ class ImageDatabase():
 
 
         logger.debug("Initialized ImageDatabase, ready to use")
-        
-
+    # implement custom queries, and IMPLEMENT THE FUCKING IMAGE OBJECT!!  
     def get_favourites(self,limit:int=1000) -> list[tuple]:
         try:
             self.cursor.execute(
                 """
                 SELECT
-                    title,file_path,source_url
+                    title,file_path,source_url,rating
                 FROM
                     images_v3
                 WHERE 
@@ -46,5 +45,6 @@ class ImageDatabase():
             return self.cursor.fetchall()
 
         except sqlite3.Error as _e:
-            logger.debug(_e)
-            return None    
+            logger.exception(_e)
+            return None        
+    

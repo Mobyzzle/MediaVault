@@ -19,7 +19,7 @@ def main():
     configure_logging()
     logging.info("Starting Imagevault....")
 
-    iv = image_service.ImageService(DB_PATH)
+    iv = image_database.ImageDatabase(DB_PATH)
 
     fav = iv.get_favourites()
 
