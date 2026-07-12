@@ -8,7 +8,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-class Vault():
+class Vault:
     def __init__(self,database:Path|Database):
         
         if not type(database) == database.ImageDatabase:

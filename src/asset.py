@@ -8,7 +8,7 @@ steve_data = {'id': 1, 'title': 'Steve', 'file_path': 'images/Steve.jpg',
                  'viewcount': 0, 'rating': 10, 'favourite': 1, 'thumbnail': None}
 
 # implement dataclass later on, typing this out genuinly made me wanna throw the keyboard
-class Asset():
+class Asset:
     def __init__(self,id:int=None,title:str = None,file_path:str|Path=None,
                  source_url:str|Path=None,width:int=None,height:int=None,
                  date_added:str=None,rating:int=None,favourite:bool|int=None,thumbnail=None,
