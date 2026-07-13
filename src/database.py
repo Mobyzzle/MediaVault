@@ -29,7 +29,7 @@ class Database:
 
 
 
-        logger.debug("Initialized ImageDatabase, ready to use")
+        logger.debug("Initialized Database, ready to use")
 
     # implement custom queries, and IMPLEMENT THE FUCKING IMAGE OBJECT!!  
     def get_favourites(self,limit:int=1000) -> list[tuple]:

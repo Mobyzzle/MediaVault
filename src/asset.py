@@ -1,19 +1,29 @@
 # the actual image class, represents images in the code
 # inherits from PIL.Image, but with added data like ID, Source, file_path, etc. etc.
-from PIL import Image
+
 from sqlite3 import Row
 from pathlib import Path
+import logging
 
+logger = logging.getLogger(__name__)
 
 # implement dataclass later on(maybe in the AssetFactory <.<.), typing this out genuinly made me wanna throw the keyboard
 class Asset:
     def __init__(self,id:int=None,title:str = None,file_path:str|Path=None,
-                 source_url:str|Path=None,width:int=None,height:int=None,
+                 source_url:str=None,width:int=None,height:int=None,
                  date_added:str=None,rating:int=None,favourite:bool|int=None,thumbnail=None,
                  last_viewed:str=None,viewcount:int=None,file_size:int=None):
+        
+        if source_url == None and file_path == None:
+            raise SyntaxError("source_url and file_path can't be None")
         self.id = id 
         self.title = title
-        self.file_path = Path(file_path)
+
+        if not file_path:
+            self.file_path = Path("placeholder")
+        else:
+            self.file_path = Path(file_path)
+
         self.source_url = source_url
         self.width = width
         self.height = height
@@ -25,6 +35,7 @@ class Asset:
         self.thumbnail = thumbnail
         self.file_size = file_size
 
+        logger.debug(f"created an Asset for {self.title}")
 
     def to_row(self) -> dict[str,object]:
 
@@ -69,17 +80,11 @@ class Asset:
 if __name__ == "__main__":
 
 
-    steve_data = {'id': 1, 'title': 'Steve', 'file_path': 'images/Steve.jpg',
-               'source_url': None, 'file_size': None, 'width': None, 'height': None, 'date_added': '2026-07-12 20:17:50', 'last_viewed': None,
-                 'viewcount': 0, 'rating': 10, 'favourite': 1, 'thumbnail': None}
-    alex_data = dict(steve_data.items())
-    alex_data["id"] = 2
+    bob_path = Path("images/bob.png")
 
+    bob = Asset(title="Bob",file_path="images/bob.png")
+    print(bob.to_row())
+    print((bob.file_path))
 
-    steve = Asset.from_row(steve_data)
-
-    alex = Asset.from_row(alex_data)
-
-    print(steve.to_row(),alex.to_row())
     
     
