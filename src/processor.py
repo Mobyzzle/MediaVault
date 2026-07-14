@@ -9,59 +9,75 @@ logger = logging.getLogger(__name__)
 class Processor:
     
     def __init__(self):
-        self.image = Image.Image
-        self.image_file_size = int
+
+        self.output_dir = Path("thumbnails")
+        self._create_thumbnail_output()
+        
         logger.info("Initialized Processor...")
 
-    def set_image(self,source:Image.Image) -> None:
-        logger.info("Image loaded into Processor....")
-        self.image = source
-        
-    def clear_processor(self) -> None:
-        logger.info("Processor cache cleared")
-        self.image = None
 
-    def _create_thumbnail(self,output_dir:str|Path,file_name:str) -> Path:
-        try:
-            img = self.image.copy()
-                
-            img.thumbnail((150,150))
-            output = f"{Path(output_dir)}/{file_name}.webp"
-            img.save(output)
-            logger.info("Thumbnail created...")
-            return Path(output)
-        except Exception as _e:
-            logger.debug(_e)
-
-
-    def _verify_image(self) -> None:
-        img = self.image.copy()
-        img.verify()
-        logger.info("Image verified...")
-
-    
-        
-
-    def _get_from_url(self,):
+    def _get_from_url(self,url):
         logger.debug("Not Implemented yet..")
 
-    def _get_from_file(self,file_path:str|Path,set:bool=False) -> Image.Image:
-        source = Path(file_path)
+    def _get_from_file(self,file_path:str|Path) -> Image.Image:
+        
+        path = Path(file_path)
+        if not path.is_file():
+            raise FileNotFoundError(f"Image not found: {path}")
 
-        try:
+        with Image.open(file_path) as im:
+            logger.info("Image opened...")
+            im.load()
+            return im.copy()
 
-            with Image.open(source) as im:
-                logger.info("Image opened as ImageFile")
+
+    def process_image_from_file(self,file_path:str|Path,title:str) -> Asset: # make this the function that is actually called in vault.py
+        logger.info("Starting to process image...")
+        path = Path(file_path)
+        if path.is_file():
+
+            img = self._get_from_file(path)
+            self._verify_image(img)
+            file_size  = self._get_file_size(path)
+            thumbnail_path = self._create_thumbnail(img,title=title)
+
+            
+        else:
+            raise ValueError(f"Couldn't find file:{path}")
+
+
+    def _create_thumbnail_output(self):
+        if not self.output_dir.is_dir():
+            self.output_dir.mkdir(exist_ok=True,parents=True)  
+    
+
+    def _create_thumbnail(self,image:Image.Image,title) -> Path: # there are some path issues here, fix them
+        
+        thumbnail = image.copy()
                 
-                if set:
-                    self.set_image(im)
-                    return None
-                return im
-        except Exception as e:
-            logger.debug(e)
+        thumbnail.thumbnail((150,150))
 
-    def _get_file_size(self,source:str|Path) -> int:
-        return os.stat(source).st_size
+        output_dir = Path(self.output_dir)
+        output_name = title
+        thumbnail.convert("")
+        output = Path(output_dir/f"{output_name}.webp")
+        thumbnail.save(output,"webp",quality=80)
+        logger.info("Thumbnail created...")
+        return output
+        
+
+
+    def _verify_image(self,image:Image.Image) -> None:
+        img = image.copy()
+        img.verify()
+        logger.info("Image verified...")
+   
+
+    def _get_file_size(self,file:str|Path) -> int:
+        file_path = Path(file)
+
+        return os.stat(file_path).st_size
+        
             
             
 
@@ -71,4 +87,4 @@ class Processor:
 
 
 if __name__ == "__main__":
-    print("fuck you")
+    processor = Processor()
