@@ -59,7 +59,7 @@ class Processor:
 
         output_dir = Path(self.output_dir)
         output_name = title
-        thumbnail.convert("")
+
         output = Path(output_dir/f"{output_name}.webp")
         thumbnail.save(output,"webp",quality=80)
         logger.info("Thumbnail created...")
