@@ -45,7 +45,7 @@ class Processor:
             title = title,
             file_path=file_path,
             file_size= file_size,
-            thumbnail=thumbnail,
+            thumbnail_path=thumbnail,
             width=img.width,
             height=img.height
         )

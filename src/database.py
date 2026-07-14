@@ -3,7 +3,8 @@
 from pathlib import Path
 import sqlite3
 import logging
-
+from asset import Asset
+from rich import print
 logger = logging.getLogger(__name__)
 
 
@@ -29,7 +30,40 @@ class Database:
 
 
 
-        logger.debug("Initialized Database, ready to use")
+        logger.info("Initialized Database, ready to use")
+
+
+
+
+    def insert_image(self,asset:Asset) -> Asset:
+
+        values = asset.to_row()[0:7] # for insertion we only care about the 7 first values 
+
+        self.cursor.execute(
+            """
+            INSERT INTO 
+                images_v3 (
+                title,
+                file_path,
+                source_url,
+                height,
+                width,
+                thumbnail_path,
+                file_size)
+            VALUES
+                (?,?,?,?,?,?,?)
+            """,(values)
+        )
+
+        self.connection.commit()
+
+
+        logger.info("successfully inserted image into Database")
+        print("🔥[bold #CC44FF]Congratulations! your Pipeline actually works 🎉🎉🎉🔥")
+        return Asset.from_row(self.search_by_id(self.cursor.lastrowid))
+
+
+
 
     # implement custom queries, and IMPLEMENT THE FUCKING IMAGE OBJECT!!  
     def get_favourites(self,limit:int=1000) -> list[tuple]:
@@ -52,7 +86,7 @@ class Database:
             logger.exception(_e)
             return None        
     
-    def search_by_id(self,id:int):
+    def search_by_id(self,id:int) -> Asset:
         try:
             self.cursor.execute(
                 """
@@ -69,4 +103,4 @@ class Database:
 
         except sqlite3.Error as _e:
             logger.exception("An Error occured: %s",(_e,))
-            return None
+            raise sqlite3.DataError from _e

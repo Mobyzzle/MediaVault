@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 console = Console()
 
-def not_yet_implemented(Object):
-    console.print("[bold red]🚧This feature is not yet Implemented🚧\n{Object}",(Object,))
+def not_yet_implemented():
+    console.print("[bold red]🚧This feature is not yet Implemented🚧")
 
 
 

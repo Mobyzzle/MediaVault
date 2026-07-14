@@ -4,7 +4,7 @@ from vault import Vault
 from database import Database
 from processor import Processor
 DB_PATH = "database/imagevault.db"
-
+from rich import print
 def configure_logging(debug:bool = True) -> None:
     logging.basicConfig(
         level=logging.DEBUG if debug else logging.INFO,
@@ -23,7 +23,8 @@ def main():
     iv = Vault(DB_PATH)
 
     im = iv.add_image("bob",test_image)
-    print(im.to_row())
+    print(im)
+    print("🔥[bold #CC44FF]Congratulations! your Pipeline actually works 🎉🎉🎉🔥")
 if __name__ == "__main__":
     main()
 

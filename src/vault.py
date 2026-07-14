@@ -21,19 +21,22 @@ class Vault:
         else:
             self.db = database
         self.processor = Processor()
-        logger.debug("Initialized Vault...")
+        logger.info("Initialized Vault...")
 #
 #
 
 # finish the ingestion pipeline, this also needs a lil rework
-    def add_image(self,title:str,file_path:str|Path=None,source_url:str=None,rating:int=1,favourite:bool=False) -> Asset:
-        path = Path(file_path)
+    def add_image(self,title:str,file_path:str|Path|None=None,source_url:str|None=None) -> Asset:
+
         if not file_path and not source_url:
             raise ValueError("no file_path and no source_url defined")
-        if path:
+        if file_path:
 
             raw_asset = self.processor.process_image_from_file(file_path=file_path,title=title)
-            return raw_asset
+            stored_asset = self.db.insert_image(raw_asset)
+            return stored_asset
+        elif source_url and not file_path:
+            not_yet_implemented()
         else:
             raise ValueError("No Filepath given")
 

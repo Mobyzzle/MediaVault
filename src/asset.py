@@ -3,11 +3,11 @@
 
 from pathlib import Path
 import logging
-
+from dataclasses import dataclass
 logger = logging.getLogger(__name__)
 
 # implement dataclass later on(maybe in the AssetFactory <.<.), typing this out genuinly made me wanna throw the keyboard
-class Asset:
+class AssetOLD:
     def __init__(self,id:int=None,title:str = None,file_path:str|Path=None,
                  source_url:str=None,width:int=None,height:int=None,
                  date_added:str=None,rating:int=1,favourite:bool|int=None,thumbnail=None,
@@ -63,6 +63,39 @@ class Asset:
 
         pass
         
+    
+    
+
+# this one is much cleaner, once it works, im glad to delete the old shit
+@dataclass(slots=True)
+class Asset:
+    
+    title : str
+    height : int
+    width : int
+    file_size : int
+    thumbnail_path : Path
+
+
+    file_path : Path|None = None #  <---These fellas are BOTH technically optional 
+    source_url : str|None = None #      but the code throws errors at 2 points of both are missing, so pick one lol
+
+    # these are being handled by the Database
+    id : int|None = None
+    date_added: str|None = None
+
+
+    rating: int|None = None         #  <--- this one specifically is handled by the database aswell
+    favourite: bool|None = None     #   they will only become relevant once we have a GUI or some way to display images 
+    viewcount: int|None = None      #    none of these are implemented yet
+    last_viewed: str|None = None    #
+
+
+    #@classmethod
+    def __post_init__(self):
+        if self.file_path is None and self.source_url is None:
+            raise ValueError("file_path and source_url can't both be none, please provide one")
+
     @classmethod
     def from_row(cls,data:dict):
         return cls(
@@ -78,17 +111,34 @@ class Asset:
             viewcount = data["viewcount"],
             rating = data["rating"],
             favourite = data["favourite"],
-            thumbnail = data["thumbnail"]
+            thumbnail_path = data["thumbnail_path"]
 
         )
 
+    def to_row(self):
+        return (
+            
+            self.title,
+            str(self.file_path),
+            self.source_url,
+            self.height,
+            self.width,
+            str(self.thumbnail_path),
+            int(self.file_size),
+            self.date_added,
+            self.last_viewed,
+            self.viewcount,
+            self.rating,
+            self.favourite,
+
+            self.id,
+        )
+
+        
+
+
+
+
+
 if __name__ == "__main__":
-
-
-    bob_path = Path("images/bob.png")
-
-    bob = Asset(title="Bob",file_path="images/bob.png")
-    
-
-    
-    
+    pass
