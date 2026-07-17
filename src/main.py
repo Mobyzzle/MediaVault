@@ -5,6 +5,10 @@ from database import Database
 from processor import Processor
 DB_PATH = "database/imagevault.db"
 from rich import print
+
+
+from test_link import link
+
 def configure_logging(debug:bool = True) -> None:
     logging.basicConfig(
         level=logging.DEBUG if debug else logging.INFO,
@@ -22,9 +26,10 @@ def main():
 
     iv = Vault(DB_PATH)
 
-    im = iv.add_image("bob",test_image)
+    im = iv.ingest_file("bob",test_image)
     print(im)
     print("🔥[bold #CC44FF]Congratulations! your Pipeline actually works 🎉🎉🎉🔥")
+    iv.ingest_from_url("Knight",link)
 if __name__ == "__main__":
     main()
 

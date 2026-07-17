@@ -37,7 +37,7 @@ class Database:
 
     def insert_image(self,asset:Asset) -> Asset:
 
-        values = asset.to_row()[0:7] # for insertion we only care about the 7 first values 
+        
 
         self.cursor.execute(
             """
@@ -51,15 +51,31 @@ class Database:
                 thumbnail_path,
                 file_size)
             VALUES
-                (?,?,?,?,?,?,?)
-            """,(values)
+                (
+                :title,
+                :file_path,
+                :source_url,
+                :height,
+                :width,
+                :thumbnail_path,
+                :file_size)
+            """,{
+                "title":asset.title,
+                "file_path":asset.file_path,
+                "source_url":asset.source_url,
+                "height" : asset.height,
+                "width":asset.width,
+                "thumbnail_path":asset.thumbnail_path,
+                "file_size":asset.file_size
+
+            }
         )
 
         self.connection.commit()
 
 
         logger.info("successfully inserted image into Database")
-        print("🔥[bold #CC44FF]Congratulations! your Pipeline actually works 🎉🎉🎉🔥")
+        
         return Asset.from_row(self.search_by_id(self.cursor.lastrowid))
 
 
