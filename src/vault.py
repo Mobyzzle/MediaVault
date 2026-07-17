@@ -8,12 +8,17 @@ from processor import Processor
 from exceptions import AppError,not_yet_implemented
 logger = logging.getLogger(__name__)
 from downloader import Downloader
-from PIL import Image
+
+
+
+
+
 class Vault:
     def __init__(self,database:Path|Database):
         
+        self.IMAGE_OUTPUT = "images/"
 
-        DEFAULT_THUMBNAIL_OUTPUT = "thumbnails/"
+        self.DEFAULT_THUMBNAIL_OUTPUT = "thumbnails/"
 
         # initialising all the components for Vault to drive, VROOM VROOM
 
@@ -22,41 +27,44 @@ class Vault:
             
         else:
             self.db = database
-        self.processor = Processor(DEFAULT_THUMBNAIL_OUTPUT)
+        self.processor = Processor(self.DEFAULT_THUMBNAIL_OUTPUT)
         self.downloader = Downloader()
 
         logger.info("Initialized Vault...")
-#
-#
+
+
 
 # finish the ingestion pipeline, this also needs a lil rework
-    def ingest_file(self,title:str,file_path:str|Path|None=None) -> Asset:
+    def ingest_file(self,title:str,file_path:str|Path|None=None,source_url:str=None) -> Asset:
 
         path = Path(file_path)
         
-        if file_path:
+        if file_path != None:
 
-            raw_asset = self.processor.process_image_from_file(file_path=path,title=title)
-            stored_asset = self.db.insert_image(raw_asset)
+            processed_asset = self.processor.process_image_from_file(file_path=path,title=title,source_url=source_url)
+            stored_asset = self.db.insert_image(processed_asset)
             return stored_asset
 
         else:
             raise ValueError("No Filepath was given")
         
 
-    def ingest_from_url(self,title:str,source_url:str) -> Asset:
+    def ingest_from_url(self,title:str,source_url:str,save_to_file:bool=False) -> Asset:
 
         if not source_url:
             raise ValueError("No Url was given")
         
-        temp_file = self.downloader.create_temp_file(source_url)
-        temp_file_path = Path(temp_file.name)
-        logger.debug(temp_file.name)
-
-        self.processor.verify_image(temp_file_path)
-        with Image.open(temp_file.name) as im:
-            im.show()
-        temp_file.close()
+        
+        
+        with self.downloader.download_image(source_url=source_url) as tempImage:
+            logger.debug(tempImage.name)
+            
+            self.processor.verify_image(tempImage.name)
+            stored_asset = self.ingest_file(title,tempImage.name,source_url=source_url)
+            if save_to_file:
+                self.processor.save_image(tempImage.name,output_dir=self.IMAGE_OUTPUT,file_name=title)
+            return stored_asset
+            
         
         
 

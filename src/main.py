@@ -26,10 +26,10 @@ def main():
 
     iv = Vault(DB_PATH)
 
-    im = iv.ingest_file("bob",test_image)
-    print(im)
-    print("🔥[bold #CC44FF]Congratulations! your Pipeline actually works 🎉🎉🎉🔥")
-    iv.ingest_from_url("Knight",link)
+
+    iv.ingest_from_url("Knight",link,save_to_file=True)
+    print("[bold #DF00FF]IF YOU SEE THIS YOUR PIPELINE ACTUALLY WORKS YOU ABSOLUTE MACHINE\nKING, YOU LION\nHERE YOU DROPPED THIS:👑👑👑")
+    
 if __name__ == "__main__":
     main()
 

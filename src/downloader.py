@@ -4,8 +4,10 @@ import tempfile
 import os
 from test_link import link,random_link,random_unsafe_link
 from pathlib import Path
+import logging
+from typing import BinaryIO
 
-import time
+logger = logging.getLogger(__name__)
 #   Structure: validate url -> Request -> check headers -> stream into Temporary file -> Pillow(Processor) validates -> Save into Images Directory -> File ingestion Pipeline
 #
 #
@@ -27,19 +29,17 @@ class Downloader:
 
 
     def download_image(self,source_url:str):
-        pass
-
-
-    def create_temp_file(self, source_url:str) -> Path:
         self._validate_url(source_url=source_url)  # <-- check if URL is in HTTPS format
-        
+        return self._create_temp_file(source_url=source_url)
 
+
+    def _create_temp_file(self, source_url:str) -> BinaryIO:
+        
         with requests.get(source_url,timeout=self.TIME_OUT_CONFIG,stream=True,allow_redirects=False) as response:
             if response.status_code == 200:
 
                 self._check_headers(response)
 
-                
                 temp = self._stream_into_temp_file(response)
                 return temp    
                 
@@ -47,7 +47,7 @@ class Downloader:
 
     def _validate_url(self,source_url:str) -> None:
         parsed = urlsplit(url=source_url)
-
+        logger.debug(parsed)
 
 
         if parsed.scheme != ("https"):
@@ -58,13 +58,17 @@ class Downloader:
             raise ValueError("Credentials in URLs are not allowed.")
 
 
-    def _stream_into_temp_file(self,data:requests.Response) -> Path:
+    def _stream_into_temp_file(self,data:requests.Response) -> BinaryIO:
         downloaded_data = tempfile.NamedTemporaryFile(dir=self.TEMP_FILE_DIRECTORY,delete_on_close=False,delete=True)
+
+        logger.debug(f"Created temp file: {downloaded_data.name}")
+
         for chunk in data.iter_content(self.CHUNK_SIZE):
             downloaded_data.write(chunk)
             if os.stat(downloaded_data.name).st_size > self.MAX_FILE_SIZE:
                 raise ValueError(f"File is too large. Maximum allowed filesize {self.MAX_FILE_SIZE_MB} MB")
-        downloaded_data.close()
+        
+        logger.debug(f"Returning: {downloaded_data.name}")
         return downloaded_data
         
         

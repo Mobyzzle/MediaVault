@@ -53,7 +53,7 @@ class Asset:
             last_viewed = str(data["last_viewed"]),
             viewcount = int(data["viewcount"]),
             rating = int(data["rating"]),
-            favourite = int(data["favourite"]),
+            favourite = bool(data["favourite"]),
             thumbnail_path = Path(data["thumbnail_path"])
 
         )
@@ -68,13 +68,13 @@ class Asset:
             int(self.width),
             str(self.thumbnail_path),
             int(self.file_size),
-            str(self.date_added),
-            str(self.last_viewed),
-            int(self.viewcount),
-            int(self.rating),
-            bool(self.favourite),
+            self.date_added,
+            self.last_viewed,
+            self.viewcount,
+            self.rating,
+            self.favourite,
 
-            int(self.id),
+            self.id,
         )
 
         

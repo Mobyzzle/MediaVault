@@ -5,6 +5,7 @@ from PIL import Image
 from pathlib import Path
 import os
 import uuid
+import mimetypes
 logger = logging.getLogger(__name__)
 
 class Processor:
@@ -32,7 +33,19 @@ class Processor:
             return im.copy()
 
 
-    def process_image_from_file(self,file_path:str|Path,title:str) -> Asset: # <-- THIS FOOKIN WORKS HELL FKN YEAH!! good job me c:
+    def save_image(self,source_path:str|Path,output_dir:str|Path,file_name:str) -> None:
+        with Image.open(source_path) as img:
+            
+            file_extension = mimetypes.guess_extension(img.get_format_mimetype())
+            
+            
+            
+            img.save(f"{output_dir}/{file_name}{file_extension}")
+        
+
+    
+
+    def process_image_from_file(self,file_path:str|Path,title:str,source_url:str|None) -> Asset: # <-- THIS FOOKIN WORKS HELL FKN YEAH!! good job me c:
         logger.info("Starting to process image...")
         
         
@@ -50,7 +63,8 @@ class Processor:
             file_size= int(file_size),
             thumbnail_path=str(thumbnail),
             width=int(img.width),
-            height=int(img.height)
+            height=int(img.height),
+            source_url=str(source_url)
         )
 
             
@@ -83,7 +97,8 @@ class Processor:
         return uuid.uuid4()
 
     def verify_image(self,file_path:str|Path) -> None:
-        if not file_path.is_file():
+        file = Path(file_path)
+        if not file.is_file():
             raise FileNotFoundError(f"Couldn't find file:{file_path}")
         else:
             with Image.open(file_path) as im:
