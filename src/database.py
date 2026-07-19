@@ -61,11 +61,11 @@ class Database:
                 :file_size)
             """,{
                 "title":asset.title,
-                "file_path":asset.file_path,
-                "source_url":asset.source_url,
-                "height" : asset.height,
-                "width":asset.width,
-                "thumbnail_path":asset.thumbnail_path,
+                "file_path":str(asset.file_path),               #   <----- these two need to be strings when inserted
+                "source_url":asset.source_url,                  #
+                "height" : asset.height,                        #
+                "width":asset.width,                            #
+                "thumbnail_path":str(asset.thumbnail_path),     #   <----- into the database, they are return back into Path object in the Asset constructor
                 "file_size":asset.file_size
 
             }
@@ -115,8 +115,10 @@ class Database:
                 """,(id,)
             )
 
-            return self.cursor.fetchone()
-
-        except sqlite3.Error as _e:
-            logger.exception("An Error occured: %s",(_e,))
-            raise sqlite3.DataError from _e
+            output = self.cursor.fetchone()
+            if output is None:
+                raise ValueError("No entry matching this ID found")
+            return output
+        except sqlite3.Error:
+            logger.debug("Failed Database Search")
+            raise

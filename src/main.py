@@ -1,8 +1,7 @@
 import logging
 
 from vault import Vault
-from database import Database
-from processor import Processor
+
 DB_PATH = "database/imagevault.db"
 from rich import print
 
@@ -26,9 +25,9 @@ def main():
 
     iv = Vault(DB_PATH)
 
+    new_asset = iv.ingest_file("Hell yeah",file_path="input/Bigoltiddies.jpg",source_url="https://google.de")
 
-    iv.ingest_from_url("Knight",link,save_to_file=True)
-    print("[bold #DF00FF]IF YOU SEE THIS YOUR PIPELINE ACTUALLY WORKS YOU ABSOLUTE MACHINE\nKING, YOU LION\nHERE YOU DROPPED THIS:👑👑👑")
+    print(new_asset.__repr__())
     
 if __name__ == "__main__":
     main()

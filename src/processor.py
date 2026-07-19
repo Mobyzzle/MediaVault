@@ -45,43 +45,41 @@ class Processor:
 
     
 
-    def process_image_from_file(self,file_path:str|Path,title:str,source_url:str|None) -> Asset: # <-- THIS FOOKIN WORKS HELL FKN YEAH!! good job me c:
+    def process_image_from_file(self,asset:Asset) -> Asset: # <-- THIS FOOKIN WORKS HELL FKN YEAH!! good job me c:
         logger.info("Starting to process image...")
         
         
             
         
-        self.verify_image(file_path)                    # <--- this one checks if it is a file and already throws an exception, no further checking needed
-        file_size  = self._get_file_size(file_path)      # 
-        img = self._get_image_from_file(file_path)       #  
+        self.verify_image(asset)
+        with Image.open(asset.file_path) as img:                    # <--- this one checks if it is a file and already throws an exception, no further checking needed
+            file_size  = self._get_file_size(asset.file_path)      #   
         
-        thumbnail = self._create_thumbnail(img,title)          # change the title to hash later, so thumbnails are unique to each image, and to avoid duplicates    
+            thumbnail_path = self._create_thumbnail(img)          # change the title to hash later, so thumbnails are unique to each image, and to avoid duplicates    
         
-        return Asset(
-            title = str(title),
-            file_path=str(file_path),
-            file_size= int(file_size),
-            thumbnail_path=str(thumbnail),
-            width=int(img.width),
-            height=int(img.height),
-            source_url=str(source_url)
-        )
+            output = Asset(
+                title = str(asset.title),
+                file_path=Path(asset.file_path),
+                file_size= int(file_size),
+                thumbnail_path=Path(thumbnail_path),
+                width=int(img.width),
+                height=int(img.height),
+                source_url=asset.source_url
+            )
+            logger.info("Succesfully processed Image Data...")
+            return output
 
             
-    def process_image_from_url(self):
-        pass
 
-    def _file_operations(self,file_path:str|Path) -> None:
-        pass
 
     def _create_thumbnail_output(self):
         if not self.thumbnail_output_dir.is_dir():
             self.thumbnail_output_dir.mkdir(exist_ok=True,parents=True)  
     
 
-    def _create_thumbnail(self,image:Image.Image,title) -> Path: # there are some path issues here, fix them
+    def _create_thumbnail(self,image_object:Image.Image) -> Path: # there are some path issues here, fix them
         
-        thumbnail = image.copy()
+        thumbnail = image_object.copy()
                 
         thumbnail.thumbnail((150,150))
 
@@ -96,12 +94,12 @@ class Processor:
     def _create_thumbnail_name(self):
         return uuid.uuid4()
 
-    def verify_image(self,file_path:str|Path) -> None:
-        file = Path(file_path)
-        if not file.is_file():
-            raise FileNotFoundError(f"Couldn't find file:{file_path}")
+    def verify_image(self,asset:Asset) -> None:
+        path = asset.file_path
+        if not path.is_file():
+            raise FileNotFoundError(f"Couldn't find file:{path}")
         else:
-            with Image.open(file_path) as im:
+            with Image.open(path) as im:
                 im.verify()
 
         
