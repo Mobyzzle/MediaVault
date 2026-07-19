@@ -25,9 +25,10 @@ def main():
 
     iv = Vault(DB_PATH)
 
-    new_asset = iv.ingest_file("Hell yeah",file_path="input/Bigoltiddies.jpg",source_url="https://google.de")
-
-    print(new_asset.__repr__())
+    image_asset = iv.ingest_file("Hell yeah",file_path="input/test.jpg",source_url="https://google.de")
+    url_asset = iv.ingest_from_url("Even more Hell yeah",source_url="https://cdn.waifu.im/8059.jpg",save_to_file=True)
+    print(image_asset.__repr__())
+    print(url_asset.__repr__())
     
 if __name__ == "__main__":
     main()

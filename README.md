@@ -21,3 +21,11 @@ Vault
 → Downloader
 → Processor
 → Database
+
+
+## v0.2.0
+- added aspect ratio algorithm
+- cleaned up Database code a bit
+- fixed some faulty Datatype declarations
+### Clean Up Work
+

@@ -5,7 +5,7 @@ from pathlib import Path
 import logging
 from dataclasses import dataclass
 logger = logging.getLogger(__name__)
-
+import random
 
     
 
@@ -23,7 +23,7 @@ class Asset:
     width : int|None = None                 #                   
     file_size : int|None = None             #    
     thumbnail_path : Path|None = None       #
-
+    aspect_ratio: str|None = None
 
     
 
@@ -36,11 +36,12 @@ class Asset:
     favourite: bool = 0     #   they will only become relevant once we have a GUI or some way to display images 
     viewcount: int|None = None      #    none of these are implemented yet
     last_viewed: str|None = None    #
-
+    file_hash: str|None = None
 
     def __post_init__(self):
         if self.file_path is None and self.source_url is None:
             raise ValueError("file_path and source_url can't both be none, please provide one")
+        self.file_hash = f"{random.randrange(100000,999999)}"
 
 
 
@@ -50,18 +51,19 @@ class Asset:
             id = data["id"],
             title = data["title"],
             file_path = Path(data["file_path"]) if data["file_path"] is not None else None,
-            source_url = data["source_url"] or None,
+            source_url = data["source_url"],
             height = data["height"],
             width = data["width"],
-            date_added = data["date_added"] or None,
+            date_added = data["date_added"],
             file_size = data["file_size"],
-            last_viewed = data["last_viewed"] or None,
-            viewcount = data["viewcount"] or None,
+            last_viewed = data["last_viewed"],
+            viewcount = data["viewcount"],
             rating = data["rating"],
             favourite = bool(data["favourite"]),
-            thumbnail_path = Path(data["thumbnail_path"]) if data["thumbnail_path"] is not None else None
-
-        )
+            thumbnail_path = Path(data["thumbnail_path"]) if data["thumbnail_path"] is not None else None,
+            aspect_ratio = data["aspect_ratio"] if data["aspect_ratio"] is not None else None,
+            file_hash = data["file_hash"]
+            )
 
     def to_row(self):
         return (
@@ -78,17 +80,19 @@ class Asset:
             self.viewcount,
             self.rating,
             self.favourite,
+            self.aspect_ratio,
 
             self.id,
+            self.file_hash
         )
 
         
-    def path_converter(self):
-        if type(self.file_path) is Path:
-            return 
+    
 
 
 
 
 if __name__ == "__main__":
-    pass
+    new_asset = Asset("Hello",file_path="test/testblabal")
+    print(new_asset.__repr__())
+    print(type(new_asset.file_hash))

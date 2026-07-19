@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 import uuid
 import mimetypes
+import math
 logger = logging.getLogger(__name__)
 
 class Processor:
@@ -17,6 +18,17 @@ class Processor:
         
         logger.info("Initialized Processor...")
 
+
+        # add to this when you learn about new aspect ratios
+        self.STANDARD_RATIOS = [
+        (1, 1),   # Square (Instagram)
+        (4, 5),   # Portrait (Instagram)
+        (3, 4),   # Standard Photo
+        (2, 3),   # Classic Photo (DSLR / 35mm)
+        (9, 16),  # Mobile Story / Video
+        (16, 9),  # Widescreen
+        (21, 9)   # Ultrawide
+        ]
 
     def _get_from_url(self,url):
         logger.debug("Not Implemented yet..")
@@ -43,7 +55,7 @@ class Processor:
             img.save(f"{output_dir}/{file_name}{file_extension}")
         
 
-    
+   
 
     def process_image_from_file(self,asset:Asset) -> Asset: # <-- THIS FOOKIN WORKS HELL FKN YEAH!! good job me c:
         logger.info("Starting to process image...")
@@ -56,7 +68,7 @@ class Processor:
             file_size  = self._get_file_size(asset.file_path)      #   
         
             thumbnail_path = self._create_thumbnail(img)          # change the title to hash later, so thumbnails are unique to each image, and to avoid duplicates    
-        
+            aspect_ratio = self._calculate_aspect_ratio(img.width,img.height)
             output = Asset(
                 title = str(asset.title),
                 file_path=Path(asset.file_path),
@@ -64,7 +76,8 @@ class Processor:
                 thumbnail_path=Path(thumbnail_path),
                 width=int(img.width),
                 height=int(img.height),
-                source_url=asset.source_url
+                source_url=asset.source_url,
+                aspect_ratio=aspect_ratio
             )
             logger.info("Succesfully processed Image Data...")
             return output
@@ -93,6 +106,37 @@ class Processor:
         
     def _create_thumbnail_name(self):
         return uuid.uuid4()
+    
+    def _calculate_aspect_ratio(self,width:int,height:int) -> str:
+
+        output = None   # just an object to format the output on different endpoints
+
+        
+
+        # calculate the actual Aspect Ratio in whole numbers
+        gcd = math.gcd(width,height)
+        ratio_width = width // gcd
+        ratio_height = height // gcd
+
+        if ratio_width < 20 and ratio_height < 20:   # <-- if the weird numbers are not too weird, fuck it output them
+            output = f"{ratio_width}:{ratio_height}" 
+        else:
+            target_ratio = width/height  # <--- actual aspect ratio as a decimal, i thought it might be simpler from here on out HAHHAHAHAHAHAHAHAHHAHAHAHA
+            best_difference = float("inf") # <- placeholder value, literally everything is smaller than infinity
+
+            #actual logic for calculating, and storing the smallest difference to an actual aspect ratio
+            for standart_width, standart_height in self.STANDARD_RATIOS:
+                
+
+                absolute_difference = abs(target_ratio-(standart_width/standart_height))
+
+                # if the difference is smaller than the best, update the best and save the state
+                if absolute_difference < best_difference:
+                    best_difference = absolute_difference
+                    output = f"{standart_width}:{standart_height}"
+
+        return output  
+
 
     def verify_image(self,asset:Asset) -> None:
         path = asset.file_path
@@ -121,6 +165,7 @@ class Processor:
 
 if __name__ == "__main__":
 
-    
+    proc = Processor("DELETE_ME")
+    print(proc._calculate_aspect_ratio(1080,1527))
 
     pass

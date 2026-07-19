@@ -23,7 +23,7 @@ class Downloader:
         self.CHUNK_SIZE = 8192
         self.CHUNK_SIZE = 64 * 1024
 
-        self.ALLOWED_FILE_FORMATS = ["image/jpeg","image/png","image/webp"]
+        self.ALLOWED_FILE_FORMATS = ["image/jpeg","image/png","image/webp","image/jpg"]
 
         self.TIME_OUT_CONFIG  = (3.0,5.0)
 

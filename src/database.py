@@ -12,6 +12,8 @@ class Database:
     def __init__(self,path:str|Path):
 
         self.path = Path(path)
+
+        self.TABLE = "images_v4"
         
         try:
             self.connection = sqlite3.connect(self.path)
@@ -40,16 +42,18 @@ class Database:
         
 
         self.cursor.execute(
-            """
+            f"""
             INSERT INTO 
-                images_v3 (
+                {self.TABLE} (
                 title,
                 file_path,
                 source_url,
                 height,
                 width,
                 thumbnail_path,
-                file_size)
+                file_size,
+                aspect_ratio,
+                file_hash)
             VALUES
                 (
                 :title,
@@ -58,16 +62,20 @@ class Database:
                 :height,
                 :width,
                 :thumbnail_path,
-                :file_size)
+                :file_size,
+                :aspect_ratio,
+                :file_hash
+                )
             """,{
                 "title":asset.title,
-                "file_path":str(asset.file_path),               #   <----- these two need to be strings when inserted
-                "source_url":asset.source_url,                  #
+                "file_path":str(asset.file_path) if asset.file_path is not None else None,               #   <----- these two need to be strings when inserted
+                "source_url":str(asset.source_url) if asset.source_url is not None else None,                  #
                 "height" : asset.height,                        #
                 "width":asset.width,                            #
-                "thumbnail_path":str(asset.thumbnail_path),     #   <----- into the database, they are return back into Path object in the Asset constructor
-                "file_size":asset.file_size
-
+                "thumbnail_path":str(asset.thumbnail_path) if asset.thumbnail_path is not None else None,     #   <----- into the database, they are return back into Path object in the Asset constructor
+                "file_size":asset.file_size,
+                "aspect_ratio":asset.aspect_ratio,
+                "file_hash":asset.file_hash,
             }
         )
 
@@ -85,11 +93,11 @@ class Database:
     def get_favourites(self,limit:int=1000) -> list[tuple]:
         try:
             self.cursor.execute(
-                """
+                f"""
                 SELECT
                     title,file_path,source_url,rating
                 FROM
-                    images_v3
+                    {self.TABLE}
                 WHERE 
                     favourite = 1
                 ORDER BY title;
@@ -105,11 +113,11 @@ class Database:
     def search_by_id(self,id:int) -> Asset:
         try:
             self.cursor.execute(
-                """
+                f"""
                 SELECT 
                     *
                 FROM
-                    images_v3
+                    {self.TABLE}
                 WHERE
                     id = ?;
                 """,(id,)
