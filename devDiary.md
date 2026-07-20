@@ -82,3 +82,22 @@ A sentinel value is a special programming marker that acts as a signal to termin
 > Aspect ratios of Images are now calculated by themselves and its fully implemented
 
 
+### DATE
+> 20.07.26
+### Goals
+> [ ] implement MediaType detection in MediaDetector.py
+> [ ] start working on the new Processor class with abstract classes
+### Implemented
+>
+### Learned
+>
+### Problems encountered
+>
+### Tomorrow
+>
+### Biggest takeaway
+>
+### Commits
+>
+### Project State
+>aa

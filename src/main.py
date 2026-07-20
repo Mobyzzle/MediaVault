@@ -1,5 +1,5 @@
 import logging
-
+from rich.logging import RichHandler
 from vault import Vault
 
 DB_PATH = "database/imagevault.db"
@@ -13,6 +13,7 @@ def configure_logging(debug:bool = True) -> None:
         level=logging.DEBUG if debug else logging.INFO,
         format="%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
         datefmt="%H:%M:%S",
+        handlers=[RichHandler(markup=True)]
     )
 
 
