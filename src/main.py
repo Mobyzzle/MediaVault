@@ -18,7 +18,6 @@ def configure_logging(debug:bool = True) -> None:
 
 
 def main():
-    test_image = "test_image/bob.png"
     
     #  logging boilerplate, we will customize this later 
     configure_logging()
@@ -26,10 +25,10 @@ def main():
 
     iv = Vault(DB_PATH)
 
-    image_asset = iv.ingest_file("Hell yeah",file_path="input/test.jpg",source_url="https://google.de")
-    url_asset = iv.ingest_from_url("Even more Hell yeah",source_url="https://cdn.waifu.im/8059.jpg",save_to_file=True)
+    image_asset = iv.ingest_file("Hell yeah",file_path="images/Tiger.jpg")
+    
     print(image_asset.__repr__())
-    print(url_asset.__repr__())
+
     
 if __name__ == "__main__":
     main()

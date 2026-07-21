@@ -2,6 +2,8 @@ import logging
 import magic
 from pathlib import Path
 from enum import Enum
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,11 +27,15 @@ class MediaTypeDetector:
         type_text = mime.split("/")[0]
 
         if type_text == "image":
+            logger.info("Inserted Media is an Image")
             return MediaType.IMAGE
         elif type_text == "video":
+            logger.info("Inserted Media is a Video")
             return MediaType.VIDEO
         else:
+            logger.info("Inserted Media is Unknown")
             return MediaType.UNKNOWN 
+        
 
     
 

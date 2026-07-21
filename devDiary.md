@@ -80,15 +80,47 @@ A sentinel value is a special programming marker that acts as a signal to termin
 ### Project State
 > MediaVault can now ingest Images from local files, or URLs, returning an Asset with all necessary data
 > Aspect ratios of Images are now calculated by themselves and its fully implemented
-
-
+---
 ### DATE
 > 20.07.26
 ### Goals
-> [ ] implement MediaType detection in MediaDetector.py
-> [ ] start working on the new Processor class with abstract classes
+> [x] implement MediaType detection in MediaDetector.py
+> [x] start working on the new Processor class with abstract classes
 ### Implemented
->
+> Processor as a base Abstract Class
+> started re-factoring Processor into image_processor 
+> Type detection for files
+> Enum for type detection and scaleability
+### Learned
+> python-magic is literal magic
+> some classes and function can be beautifully simple
+> abstract classes rock
+> i should sleep more
+> Enums are super for constant values that dont need re-typing at everystep, and it protects from typos (i need this ALOT)
+### Problems encountered
+> large refactors aren't fun (jk i love coding <3)
+> ImageProcessor, formerly knows as Processor requires alot of re-structuring
+> Refactoring introduces ALOT of bugs, i will do some hard work on the processors tomorrow
+### Tomorrow
+> repair ingestion pipeline, finish processor refactor
+### Biggest takeaway
+> Abstract classes are a good exercise in polymorphism
+### Commits
+> yes
+### Project State
+> MediaVault now automatically detects a given FileType using python-magic. The processing architecture is now moving from image-specific to more media types
+---
+### DATE
+>21.07.2026     
+### Goals
+> [] get the pipeline working again
+> [] refactor Processor into abstract Class
+> [] refactor Asset class into something that can spit out its data
+> [x] implement file hashing
+### Implemented
+> File hashing
+>   - the processor now spits out file_hashes and they're stored in the database, also my tests based on repeatedly throwing the same image
+>     database are now unfunctional
 ### Learned
 >
 ### Problems encountered
@@ -100,4 +132,5 @@ A sentinel value is a special programming marker that acts as a signal to termin
 ### Commits
 >
 ### Project State
->aa
+>
+---

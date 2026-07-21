@@ -4,12 +4,11 @@ from database import Database
 import logging
 from pathlib import Path
 from asset import Asset
-from processor import Processor
+from processors.image_processor import ImageProcessor
 from exceptions import AppError,not_yet_implemented
 logger = logging.getLogger(__name__)
 from downloader import Downloader
-
-
+from media_type_detector import MediaTypeDetector,MediaType
 
 
 
@@ -27,9 +26,9 @@ class Vault:
             
         else:
             self.db = database
-        self.processor = Processor(self.DEFAULT_THUMBNAIL_OUTPUT)
+        self.image_processor = ImageProcessor(self.DEFAULT_THUMBNAIL_OUTPUT)
         self.downloader = Downloader()
-
+        self.detector = MediaTypeDetector()
         logger.info("Initialized Vault...")
 
 
@@ -44,19 +43,14 @@ class Vault:
 
         if file_path is None:             # Catch exception earlier instead of else block
             raise ValueError("No Filepath was given")
-
-
-        if not isinstance(file_path,Path):
-            path = Path(file_path)
-        else:
-            path = file_path
+        
+        validated_path = self._validate_path(file_path=file_path)
         
         
-        
-        raw_asset = Asset(title,path,source_url)
         try:
-                processed_asset = self.processor.process_image_from_file(raw_asset)
-                stored_asset = self.db.insert_image(processed_asset)
+                processed_data = self.image_processor.process(validated_path,title,source_url)
+                prototype_asset = Asset.from_data(processed_data)
+                stored_asset = self.db.insert_image(prototype_asset)
                 return stored_asset
         except Exception:
             logger.debug("Image Ingestion failed")    # use this to see what goes wrong for now
@@ -75,7 +69,7 @@ class Vault:
         
         
         
-        with self.downloader.download_image(source_url=source_url) as tempImage:
+        with self.downloader.download(source_url=source_url) as tempImage:
             logger.debug(tempImage.name)
             stored_asset = self.ingest_file(title,tempImage.name,source_url=source_url)
             if save_to_file:
@@ -83,5 +77,6 @@ class Vault:
             return stored_asset
             
         
-        
+    def _validate_path(self,file_path:str|Path) -> Path:
+        return Path(file_path) 
 

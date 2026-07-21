@@ -26,9 +26,9 @@ class Downloader:
         self.ALLOWED_FILE_FORMATS = ["image/jpeg","image/png","image/webp","image/jpg"]
 
         self.TIME_OUT_CONFIG  = (3.0,5.0)
+        
 
-
-    def download_image(self,source_url:str):
+    def download(self,source_url:str):
         self._validate_url(source_url=source_url)  # <-- check if URL is in HTTPS format
         return self._create_temp_file(source_url=source_url)
 
@@ -41,8 +41,8 @@ class Downloader:
                 self._check_headers(response)
 
                 temp = self._stream_into_temp_file(response)
-                return temp    
                 
+                return temp
         
 
     def _validate_url(self,source_url:str) -> None:
@@ -72,7 +72,7 @@ class Downloader:
         return downloaded_data
         
         
-        
+
 
     def _check_headers(self,response:requests.Response) -> None:
         if not response.headers["content-type"] in self.ALLOWED_FILE_FORMATS:

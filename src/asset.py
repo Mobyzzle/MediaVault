@@ -5,7 +5,7 @@ from pathlib import Path
 import logging
 from dataclasses import dataclass
 logger = logging.getLogger(__name__)
-import random
+
 
     
 
@@ -30,18 +30,16 @@ class Asset:
     # these are being handled by the Database
     id : int|None = None
     date_added: str|None = None
-
-
     rating: int|None = None         #  <--- this one specifically is handled by the database aswell
     favourite: bool = 0     #   they will only become relevant once we have a GUI or some way to display images 
-    viewcount: int|None = None      #    none of these are implemented yet
+    viewcount: int|None = None      #    
     last_viewed: str|None = None    #
-    file_hash: str|None = None
+    file_hash: str|None = None         # <--- implement this once the backend and pipeline are working again
 
     def __post_init__(self):
         if self.file_path is None and self.source_url is None:
             raise ValueError("file_path and source_url can't both be none, please provide one")
-        self.file_hash = f"{random.randrange(100000,999999)}"
+        
 
 
 
@@ -64,6 +62,20 @@ class Asset:
             aspect_ratio = data["aspect_ratio"] if data["aspect_ratio"] is not None else None,
             file_hash = data["file_hash"]
             )
+
+    @classmethod
+    def from_data(cls,data:dict):
+        return cls(
+            title=data["title"],
+            file_path=data["file_path"],
+            source_url=data["source_url"],
+            height=data["height"],
+            width = data["width"],
+            file_size = data["file_size"],
+            thumbnail_path = Path(data["thumbnail_path"]) if data["thumbnail_path"] is not None else None,
+            aspect_ratio = data["aspect_ratio"] if data["aspect_ratio"] is not None else None,
+            file_hash = data["file_hash"]
+        ) 
 
     def to_row(self):
         return (
