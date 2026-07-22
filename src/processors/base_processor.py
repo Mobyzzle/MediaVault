@@ -15,7 +15,7 @@ class Processor(ABC):
 
     
     @abstractmethod
-    def process(self):
+    def process(self,file_path:Path,title:str,source_url:str=None) -> dict:
         pass
 
 

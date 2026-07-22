@@ -10,19 +10,10 @@ import math
 from .base_processor import Processor
 import hashlib
 logger = logging.getLogger(__name__)
-
+from utils import STANDARD_RATIOS
 
 class ImageProcessor(Processor):
-    # add to this when you learn about new aspect ratios
-    STANDARD_RATIOS = (
-        (1, 1),   # Square (Instagram)
-        (4, 5),   # Portrait (Instagram)
-        (3, 4),   # Standard Photo
-        (2, 3),   # Classic Photo (DSLR / 35mm)
-        (9, 16),  # Mobile Story / Video
-        (16, 9),  # Widescreen
-        (21, 9)   # Ultrawide
-        )
+
     
     def __init__(self,thumbnail_output:str|Path):
         super().__init__(thumbnail_output)
@@ -37,7 +28,7 @@ class ImageProcessor(Processor):
     def _get_image_from_file(self,file_path:str|Path) -> Image.Image:
         
         path = Path(file_path)
-
+        
         with Image.open(path) as im:
             self.logger.info("Image opened...")
             im.load()
@@ -119,7 +110,7 @@ class ImageProcessor(Processor):
             best_difference = float("inf") # <- placeholder value, literally everything is smaller than infinity
 
             #actual logic for calculating, and storing the smallest difference to an actual aspect ratio
-            for standart_width, standart_height in self.STANDARD_RATIOS:
+            for standart_width, standart_height in STANDARD_RATIOS:
                 
 
                 absolute_difference = abs(target_ratio-(standart_width/standart_height))

@@ -1,5 +1,6 @@
-CREATE TABLE images_v4(
+CREATE TABLE images_v5(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
+media_type TEXT NOT NULL,
 title TEXT NOT NULL DEFAULT "Untitled",
 file_path TEXT,
 source_url TEXT,

@@ -1,32 +1,21 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from abc import ABC,abstractmethod
-from __future__ import annotations
 import logging
 from pathlib import Path
+from enums import MediaType
 logger = logging.getLogger(__name__)
 
 
-@dataclass 
+@dataclass(slots=True) 
 class MediaAsset(ABC):            # Base Asset class
-    title:str                       # these are all actually whats needed
+    title:str  
+    media_type: MediaType                     # these are all actually whats needed
     file_path: Path | None = None          #
     source_url:str|None = None           # 
+            # this gets added during processing
 
-
-    @classmethod
-    @abstractmethod
-    def from_data(cls,data:dict) -> MediaAsset:
-        pass
-
-    @classmethod
-    @abstractmethod
-    def from_row(cls,data:dict) -> MediaAsset:
-        pass
-
-
-    @abstractmethod
-    def to_row(self) -> dict:
-        pass
+    
 
     
 

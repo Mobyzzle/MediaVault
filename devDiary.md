@@ -128,17 +128,46 @@ A sentinel value is a special programming marker that acts as a signal to termin
 > SHA256 Hashing and file hashing
 > sub folder structuring
 > folder and storage structure for later use, everything really becomes easier once file hashing stands
-> 
+> separating Responsibilities
 ### Problems encountered
 > a singular "." in an import screwed the entire pipeline, 15 minutes i'll never get back
-
+> Refactoring creates 15 insertion bugs, then a few ValueErrors, then it was just spitting out None for a few minutes lol
 ### Tomorrow
->
+> implement AssetFactory
 ### Biggest takeaway
 > File hashing fucking rocks
 > a good structure pay off very well
+> TODAY I GOT EVERYTHING DONE I PLANNED TO DO
+### Commits
+> yea
+### Project State
+> MediaVault now has a structure where future implementations are way easier
+---
+
+### DATE
+> 220.07.2026
+### Goals
+> [x] implement AssetFactory into the Pipeline structure
+> [x] if time is left, work on the repository (formerly known as Database) class for more query features
+### Implemented
+> AssetFactory is now part of of the construction and re-consctruction path
+> Added proper MediaType serialization/deserialization between Python and SQLite.
+> Updated database queries to work with the new AssetFactory architecture
+> Fixed Several issues that the Refactor introduced, i'd say the refactor is like 80% done
+> cleaned up ingest_file function inside Vault HEAVILY
+### Learned
+> i still have alot to learn, but i love this project so much
+> Enums need to serialized before storing them in SQLite and re-serialized when using them (implement this into repository)
+### Problems encountered
+> Forgot to reconstruct MediaType from the database string before passing data into the AssetFactory.
+> Had to update several repository functions after changing the construction flow.
+> Spent some time tracking down small integration bugs left behind by the refactor.
+### Tomorrow
+>
+### Biggest takeaway
+>Today's work wasn't about adding new features—it was about making the architecture consistent. Every bug I fixed came from one place still using the old design. Once every layer followed the same pipeline again, everything started falling back into place.
 ### Commits
 >
 ### Project State
->
+> still mid refactor, but the architecture for future file types is getting close to finished
 ---

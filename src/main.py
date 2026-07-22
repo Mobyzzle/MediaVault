@@ -2,7 +2,7 @@ import logging
 from rich.logging import RichHandler
 from vault import Vault
 
-DB_PATH = "database/imagevault.db"
+
 from rich import print
 
 
@@ -23,11 +23,11 @@ def main():
     configure_logging()
     logging.info("Starting Imagevault....")
 
-    iv = Vault(DB_PATH)
+    iv = Vault()
 
-    image_asset = iv.ingest_file("Hell yeah",file_path="images/Gregor Gysi.jpg")
-    
-    print(image_asset.__repr__())
+    image_asset = iv.ingest_file("Hell yeah",file_path="images/Panda.jpg")
+    print(image_asset)
+    print(type(image_asset))
 
     
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 # the actual image class, represents images in the code
 # inherits from PIL.Image, but with added data like ID, Source, file_path, etc. etc.
-
+from __future__ import annotations
 from pathlib import Path
 import logging
 from dataclasses import dataclass
 logger = logging.getLogger(__name__)
 from .media_asset import MediaAsset
-from __future__ import annotations
+
     
 
 # this one is much cleaner, once it works, im glad to delete the old shit
@@ -33,64 +33,6 @@ class ImageAsset(MediaAsset):
     last_viewed: str|None = None    #
     file_hash: str|None = None         # <--- implement this once the backend and pipeline are working again
 
-        
-
-
-
-    @classmethod
-    def from_row(cls,data:dict):
-        return cls(
-            id = data["id"],
-            title = data["title"],
-            file_path = Path(data["file_path"]) if data["file_path"] is not None else None,
-            source_url = data["source_url"],
-            height = data["height"],
-            width = data["width"],
-            date_added = data["date_added"],
-            file_size = data["file_size"],
-            last_viewed = data["last_viewed"],
-            viewcount = data["viewcount"],
-            rating = data["rating"],
-            favourite = bool(data["favourite"]),
-            thumbnail_path = Path(data["thumbnail_path"]) if data["thumbnail_path"] is not None else None,
-            aspect_ratio = data["aspect_ratio"] if data["aspect_ratio"] is not None else None,
-            file_hash = data["file_hash"]
-            )
-
-    @classmethod
-    def from_data(cls,data:dict):
-        return cls(
-            title=data["title"],
-            file_path=data["file_path"],
-            source_url=data["source_url"],
-            height=data["height"],
-            width = data["width"],
-            file_size = data["file_size"],
-            thumbnail_path = Path(data["thumbnail_path"]) if data["thumbnail_path"] is not None else None,
-            aspect_ratio = data["aspect_ratio"] if data["aspect_ratio"] is not None else None,
-            file_hash = data["file_hash"]
-        ) 
-
-    def to_row(self) -> tuple:
-        return (
-            
-            self.title,
-            str(self.file_path) if self.file_path is not None else None,
-            self.source_url,
-            self.height,
-            self.width,
-            str(self.thumbnail_path) if self.thumbnail_path is not None else None,
-            self.file_size,
-            self.date_added,
-            self.last_viewed,
-            self.viewcount,
-            self.rating,
-            self.favourite,
-            self.aspect_ratio,
-
-            self.id,
-            self.file_hash
-        )
 
         
     
