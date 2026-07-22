@@ -3,7 +3,7 @@
 from pathlib import Path
 import sqlite3
 import logging
-from asset import Asset
+from assets import MediaAsset,ImageAsset
 from rich import print
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ class Database:
 
 
 
-    def insert_image(self,asset:Asset) -> Asset:
+    def insert_image(self,asset:MediaAsset) -> ImageAsset:
 
         
 
@@ -84,7 +84,7 @@ class Database:
 
         logger.info("successfully inserted image into Database")
         
-        return Asset.from_row(self.search_by_id(self.cursor.lastrowid))
+        return ImageAsset.from_row(self.search_by_id(self.cursor.lastrowid))
 
 
 
@@ -110,7 +110,7 @@ class Database:
             logger.exception(_e)
             return None        
     
-    def search_by_id(self,id:int) -> Asset:
+    def search_by_id(self,id:int) -> MediaAsset:
         try:
             self.cursor.execute(
                 f"""

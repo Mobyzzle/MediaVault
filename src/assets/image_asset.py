@@ -5,20 +5,17 @@ from pathlib import Path
 import logging
 from dataclasses import dataclass
 logger = logging.getLogger(__name__)
-
-
+from .media_asset import MediaAsset
+from __future__ import annotations
     
 
 # this one is much cleaner, once it works, im glad to delete the old shit
 @dataclass(slots=True)
-class Asset:
+class ImageAsset(MediaAsset):
     
-    title : str                 #           <---- these are are all mandatroy inputs, handled by the processor
-    file_path : Path|None = None #  <---These fellas are BOTH technically optional 
-    source_url : str|None = None #      but the code throws errors at 2 points of both are missing, so pick one lol
+    
 
-
-
+    # these are Image specific now, the base class doesn't need these
     height : int|None = None                #
     width : int|None = None                 #                   
     file_size : int|None = None             #    
@@ -36,9 +33,6 @@ class Asset:
     last_viewed: str|None = None    #
     file_hash: str|None = None         # <--- implement this once the backend and pipeline are working again
 
-    def __post_init__(self):
-        if self.file_path is None and self.source_url is None:
-            raise ValueError("file_path and source_url can't both be none, please provide one")
         
 
 
@@ -77,7 +71,7 @@ class Asset:
             file_hash = data["file_hash"]
         ) 
 
-    def to_row(self):
+    def to_row(self) -> tuple:
         return (
             
             self.title,
@@ -105,6 +99,4 @@ class Asset:
 
 
 if __name__ == "__main__":
-    new_asset = Asset("Hello",file_path="test/testblabal")
-    print(new_asset.__repr__())
-    print(type(new_asset.file_hash))
+    print("you are cute")

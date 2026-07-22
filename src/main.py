@@ -25,7 +25,7 @@ def main():
 
     iv = Vault(DB_PATH)
 
-    image_asset = iv.ingest_file("Hell yeah",file_path="images/Tiger.jpg")
+    image_asset = iv.ingest_file("Hell yeah",file_path="images/Gregor Gysi.jpg")
     
     print(image_asset.__repr__())
 

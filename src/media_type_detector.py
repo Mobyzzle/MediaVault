@@ -1,17 +1,11 @@
 import logging
 import magic
 from pathlib import Path
-from enum import Enum
+from enums import MediaType
 
 
 logger = logging.getLogger(__name__)
 
-
-class MediaType(Enum):
-    IMAGE = "image"
-    VIDEO = "video"
-    AUDIO = "audio"
-    UNKNOWN = "unknown"
 
 
 

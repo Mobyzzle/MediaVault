@@ -113,22 +113,30 @@ A sentinel value is a special programming marker that acts as a signal to termin
 ### DATE
 >21.07.2026     
 ### Goals
-> [] get the pipeline working again
-> [] refactor Processor into abstract Class
-> [] refactor Asset class into something that can spit out its data
+> [x] get the pipeline working again
+> [x] refactor Processor into abstract Class
+> [x] refactor Asset class into something that can spit out its data
 > [x] implement file hashing
 ### Implemented
 > File hashing
 >   - the processor now spits out file_hashes and they're stored in the database, also my tests based on repeatedly throwing the same image
 >     database are now unfunctional
+> ingestion pipeline is functional again, stronger than ever
+> started organizing the project into folders to keep it a bit more neat, also the src folder would become too crowded at this point
+> Structure for future implementations and refactors stands
 ### Learned
->
+> SHA256 Hashing and file hashing
+> sub folder structuring
+> folder and storage structure for later use, everything really becomes easier once file hashing stands
+> 
 ### Problems encountered
->
+> a singular "." in an import screwed the entire pipeline, 15 minutes i'll never get back
+
 ### Tomorrow
 >
 ### Biggest takeaway
->
+> File hashing fucking rocks
+> a good structure pay off very well
 ### Commits
 >
 ### Project State
