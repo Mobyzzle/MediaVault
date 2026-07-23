@@ -104,8 +104,9 @@ class MediaRepository:
                     {self.TABLE}
                 WHERE 
                     favourite = 1
-                LIMIT ?
-                ORDER BY title;
+                
+                ORDER BY title
+                LIMIT ?;
                 """,(limit,)
             )
 
@@ -117,7 +118,7 @@ class MediaRepository:
 
         except sqlite3.Error as _e:
             logger.exception(_e)
-            return None        
+            raise       
     
     def search_by_id(self,id:int) -> dict:
         try:
@@ -132,11 +133,12 @@ class MediaRepository:
                 """,(id,)
             )
 
-            output = dict(self.cursor.fetchone())
-            logger.debug(f"Query found {output}")
-            if output is None:
+            row = self.cursor.fetchone()
+            if row is None:
                 raise ValueError("No entry matching this ID found")
-            return output
+            logger.debug(f"Query found {tuple(row)}")
+            
+            return dict(dict(row))
         except sqlite3.Error:
             logger.debug("Failed Database Search")
             raise
@@ -145,12 +147,13 @@ class MediaRepository:
         match asset.media_type:
             case MediaType.IMAGE:
                 return self._convert_imageasset_to_row(asset)
+            case _:
+                raise ValueError("unsupported AssetType")
             
 
 
     def _convert_imageasset_to_row(self,asset:ImageAsset) -> dict:
         return {
-            "media_type" : asset.media_type,
             "title":asset.title,
             "file_path":str(asset.file_path) if asset.file_path is not None else None,               #   <----- these two need to be strings when inserted
             "source_url":str(asset.source_url) if asset.source_url is not None else None,            #
@@ -162,3 +165,25 @@ class MediaRepository:
             "file_hash":asset.file_hash,
             "media_type":asset.media_type.value,
         }
+
+    def search_by_title(self,title:str) -> list[tuple]:
+
+        self.cursor.execute(
+            f"""
+            SELECT
+                title,
+                id
+            FROM
+                {self.TABLE}
+            WHERE
+                title = ?;
+            """,(title,)
+        )
+
+        rows = self.cursor.fetchall()
+        output = []
+        if not rows:
+            raise ValueError(f"No Assets found matching: {title}")
+        for row in rows:
+            output.append(tuple(row))
+        return output

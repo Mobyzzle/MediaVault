@@ -25,9 +25,8 @@ def main():
 
     iv = Vault()
 
-    image_asset = iv.ingest_file("Hell yeah",file_path="images/Panda.jpg")
-    print(image_asset)
-    print(type(image_asset))
+    ids = iv.repository.search_by_title("Hell yeah")
+    print(ids)
 
     
 if __name__ == "__main__":

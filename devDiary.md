@@ -167,7 +167,31 @@ A sentinel value is a special programming marker that acts as a signal to termin
 ### Biggest takeaway
 >Today's work wasn't about adding new features—it was about making the architecture consistent. Every bug I fixed came from one place still using the old design. Once every layer followed the same pipeline again, everything started falling back into place.
 ### Commits
->
+> 7ba7bcc
 ### Project State
 > still mid refactor, but the architecture for future file types is getting close to finished
+---
+
+### DATE
+>23.07.2026
+### Goals
+> [x] Make repository more solid, and remove old junk
+> [x] started implementing and learning PyTest
+### Implemented
+> search by title function
+> first test
+### Learned
+> SQL is painful
+> pytest structure
+### Problems encountered
+> today was a bad day mentally, we'll continue tomorrow
+> i swear to god imports will be the end of me
+### Tomorrow
+> more testing and some fun coding
+### Biggest takeaway
+> fuck it, we ball
+### Commits
+> None
+### Project State
+> MediaVault now tests if AssetFactory returns an actual ImageAsset
 ---

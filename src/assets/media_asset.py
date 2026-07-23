@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from abc import ABC,abstractmethod
 import logging
 from pathlib import Path
-from enums import MediaType
+from ..enums import MediaType
 logger = logging.getLogger(__name__)
 
 
