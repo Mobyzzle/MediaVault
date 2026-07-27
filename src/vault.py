@@ -17,7 +17,7 @@ class Vault:
     def __init__(self):
         
         self.IMAGE_OUTPUT = "images/"
-
+        self.DOWNLOAD_OUTPUT = "downloads/"
         self.DEFAULT_THUMBNAIL_OUTPUT = "thumbnails/"
 
         self.DEFAULT_DATABASE_PATH = "database/imagevault.db"
@@ -78,7 +78,8 @@ class Vault:
             logger.debug(tempImage.name)
             stored_asset = self.ingest_file(title,tempImage.name,source_url=source_url)
             if save_to_file:
-                self.processor.save_image(tempImage.name,output_dir=self.IMAGE_OUTPUT,file_name=title)
+                processor = self._get_processor(stored_asset.media_type)
+                processor.save_image(tempImage.name,output_dir=self.DOWNLOAD_OUTPUT,file_name=title)
             return stored_asset
             
         

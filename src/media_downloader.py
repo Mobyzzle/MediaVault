@@ -36,13 +36,17 @@ class Downloader:
     def _create_temp_file(self, source_url:str) -> BinaryIO:
         
         with requests.get(source_url,timeout=self.TIME_OUT_CONFIG,stream=True,allow_redirects=False) as response:
-            if response.status_code == 200:
 
-                self._check_headers(response)
+            
 
-                temp = self._stream_into_temp_file(response)
+            if response.status_code != 200:
+                raise ConnectionError(f"Error with code: {response.status_code}")
+
+            self._check_headers(response)
+
+            temp = self._stream_into_temp_file(response)
                 
-                return temp
+            return temp
         
 
     def _validate_url(self,source_url:str) -> None:

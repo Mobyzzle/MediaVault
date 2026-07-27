@@ -25,7 +25,7 @@ class MediaRepository:
             self.cursor = self.connection.cursor()
 
             logger.info("Cursor was created....")
-
+            self.initialize()
         except sqlite3.Error as _e:
             logger.debug("failed to connect to Database due to: %s ",(_e,))
             raise FileNotFoundError
@@ -35,6 +35,12 @@ class MediaRepository:
         logger.info("Initialized Database, ready to use")
 
 
+    def initialize(self):
+
+        with open("sql/schema.sql","r") as file:
+            sql = file.read()
+            self.cursor.executescript(sql)
+            self.connection.commit()
 
 
     def insert_asset(self,asset:MediaAsset) -> dict:
@@ -187,3 +193,9 @@ class MediaRepository:
         for row in rows:
             output.append(tuple(row))
         return output
+
+
+
+
+if __name__ == "__main__":
+    pass

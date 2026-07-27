@@ -24,10 +24,8 @@ def main():
     logging.info("Starting Imagevault....")
 
     iv = Vault()
-
-    ids = iv.repository.search_by_title("Hell yeah")
-    print(ids)
-
+    asset = iv.ingest_from_url("Big ol Bitties","https://static1.e621.net/data/sample/fb/a2/fba206e404425e1984be5d90deae8f1d.webp",True)
+    print(asset.__repr__())
     
 if __name__ == "__main__":
     main()

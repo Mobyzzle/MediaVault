@@ -1,5 +1,5 @@
-from .assets import ImageAsset, MediaAsset
-from .enums import MediaType
+from assets import ImageAsset, MediaAsset
+from enums import MediaType
 import logging
 from pathlib import Path
 logger = logging.getLogger(__name__)

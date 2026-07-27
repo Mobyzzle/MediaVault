@@ -193,5 +193,47 @@ A sentinel value is a special programming marker that acts as a signal to termin
 ### Commits
 > None
 ### Project State
-> MediaVault now tests if AssetFactory returns an actual ImageAsset
+> MediaVault now tests if AssetFactory returns an actual ImageAsset2
+---
+> Testing is driving me insane, so i had ChatGPT write todays entry, because fuck it:
+### DATE
+> 26.07.2026
+### Goals
+>Learn the basics of pytest
+>Write the first meaningful repository tests
+>Fix project-wide import issues
+>Better understand Python package structure
+### Implemented
+>Set up repository tests using temporary SQLite databases.
+>Verified that the repository initializes a fresh database correctly.
+>Wrote a repository test that inserts an asset and verifies that the returned data matches the stored values.
+>Fixed multiple stale imports after the package refactor.
+>Learned how package-relative and absolute imports work and cleaned up inconsistent import paths.
+>Improved my understanding of Python tracebacks by following the import chain to locate the failing module instead of guessing.
+### Learned
+>A traceback should be read from the bottom up. The exception tells me what failed, while the stack above it tells me how execution reached that point.
+>Refactoring package structures often exposes stale imports one by one, which is normal.
+>A unit test should verify a component's contract rather than every line of code.
+>Repository tests and AssetFactory tests should be separated so failures point directly to the broken component.
+>Good tests reveal architectural decisions. One failed assertion highlighted that I need to decide what the repository's contract for file paths should be.
+### Problems encountered
+>pent a significant amount of time chasing import issues after reorganizing the project.
+>Writing tests felt slow and repetitive because I was unsure what was actually worth testing.
+>Ran into platform-specific path differences (/ vs \), which exposed an inconsistency in how file paths are represented.
+### Tomorrow
+>Decide on the repository contract for path handling and update the tests accordingly.
+>Add one more meaningful repository test for duplicate hash handling.
+>Commit the testing foundation.
+>Return to feature development, with the downloader rewrite, URL ingestion improvements, or video support being the next priorities.
+### Biggest takeaway
+> These are my own words:
+> i get why Testing exists, but learning it is currently definitly the most dull aspect of Software engineering,
+> i didn't add any new flashy features, but the testing foundation definitly showed me some of the weaknesses in my project, it especially forced me
+> to learn a lot about imports in Python and how the package system worked instead of relying on imports that happened to work#
+> writing tests forces me to define contracts between my components
+> i also learned abit of probabilities and weighted loot tables when i was distracting myself on a different project
+### Commits
+>
+### Project State
+>MediaVault now has a functioning testing foundation. The repository is no longer completely unverified, pytest is integrated into the workflow, and the project structure is much cleaner after resolving the import issues. Future refactors should be significantly less risky.
 ---
