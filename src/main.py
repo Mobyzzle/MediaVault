@@ -24,7 +24,7 @@ def main():
     logging.info("Starting Imagevault....")
 
     iv = Vault()
-    asset = iv.ingest_from_url("Big ol Bitties","https://static1.e621.net/data/sample/fb/a2/fba206e404425e1984be5d90deae8f1d.webp",True)
+    asset = iv.ingest_file(title="yup",file_path="mediavault_data/testMedia/insert_me.png")
     print(asset.__repr__())
     
 if __name__ == "__main__":

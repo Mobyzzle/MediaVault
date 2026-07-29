@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 from media_downloader import Downloader
 from media_type_detector import MediaTypeDetector,MediaType
 from assets import MediaAsset
-
+from storage_manager import StorageManager
 
 
 class Vault:
@@ -26,7 +26,8 @@ class Vault:
         self.repository = MediaRepository(self.DEFAULT_DATABASE_PATH)
         self.processors = self._initialize_processors()
         self.asset_factory = AssetFactory()
-
+        self.storage_manager = StorageManager()
+        self.storage_manager.initialize()
         self.downloader = Downloader()
         self.detector = MediaTypeDetector()
         logger.info("Initialized Vault...")
@@ -46,16 +47,22 @@ class Vault:
         
         path = self._validate_path(file_path=file_path) # this converts strings into Path objects, so no further conversion needed
 
+
+
         
         
         try:
-                media_type,mime_type = self.detector.detect(file_path=path)
+                staged_path = self.storage_manager.copy_to_input(path) 
+
+                media_type = self.detector.detect(file_path=staged_path)
                 processor = self._get_processor(media_type=media_type)
-                data = processor.process(file_path=path,title=title,source_url=source_url)         
-                
+                data = processor.process(file_path=staged_path,title=title,source_url=source_url)         
+                stored_path = self.storage_manager.store_file(staged_path,data["file_hash"])
+                data["file_path"] = stored_path
                 raw_asset = self.asset_factory.construct(media_type=media_type,data=data)
                 stored_asset_data = self.repository.insert_asset(raw_asset)
                 stored_asset = self.asset_factory.construct(data=stored_asset_data,media_type=MediaType(stored_asset_data["media_type"]))
+                
                 return stored_asset
         except Exception:
             logger.exception("Media insertion failed...")    # use this to see what goes wrong for now

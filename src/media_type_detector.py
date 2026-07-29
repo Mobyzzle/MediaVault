@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 class MediaTypeDetector:
     
 
-    def detect(self,file_path:str|Path) -> MediaType:
+    def detect(self,file_path:str|Path) -> tuple[MediaType,str]:
         path = Path(file_path)
         if not path.is_file():
             raise FileNotFoundError(f"File not Found: {file_path}")
         
         mime = magic.from_file(str(path),mime=True)
+        
         type_text = mime.split("/")[0]
-
         if type_text == "image":
             logger.info("Inserted Media is an Image")
             return MediaType.IMAGE
@@ -38,5 +38,5 @@ class MediaTypeDetector:
 
 if __name__ == "__main__":
     detector = MediaTypeDetector()
-    print(detector.detect("testMedia/smiley.png").value)
+    print(detector.detect("testMedia/smiley.png"))
     
