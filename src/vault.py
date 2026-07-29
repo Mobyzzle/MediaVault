@@ -49,7 +49,7 @@ class Vault:
         
         
         try:
-                media_type = self.detector.detect(file_path=path)
+                media_type,mime_type = self.detector.detect(file_path=path)
                 processor = self._get_processor(media_type=media_type)
                 data = processor.process(file_path=path,title=title,source_url=source_url)         
                 
